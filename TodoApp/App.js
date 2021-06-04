@@ -1,49 +1,23 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, FlatList, SafeAreaView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
-const DATA = [
-  {
-    id: '1',
-    title: 'First Item',
-  },
-  {
-    id: '2',
-    title: 'Second Item',
-  },
-  {
-    id: '3',
-    title: 'Third Item',
-  },
-  {
-    id: '1',
-    title: 'First Item',
-  },
-  {
-    id: '2',
-    title: 'Second Item',
-  },
-  {
-    id: '3',
-    title: 'Third Item',
-  },
-  {
-    id: '1',
-    title: 'First Item',
-  },
-  {
-    id: '2',
-    title: 'Second Item',
-  },
-  {
-    id: '3',
-    title: 'Third Item',
-  },
-];
 export default function App() {
 
+  const [text, setText] = useState('');
+  const [newText, setNewText] = useState('');
+  
+  const writeText=async()=>{
+    await AsyncStorage.setItem("key1",JSON.stringify({'note':text}));
+    readText();
+  }
+  const readText=async()=>{
+    setNewText( await AsyncStorage.getItem("key1"));
+    console.log(newText);
+
+  }
   return (
     <View style={styles.container}>
       <View style={styles.headerTextView}>
@@ -51,44 +25,46 @@ export default function App() {
       </View>
       <View style={styles.inputContainer}>
         <View style={styles.inputView1}>
-          <TextInput style={styles.inputText} placeholder="Write a task...">
+          <TextInput style={styles.inputText} placeholder="Write a task..." onChangeText={text=>setText(text)}>
           </TextInput>
         </View>
         <View style={styles.inputView2}>
-          <TouchableOpacity style={styles.addButton} >
+          <TouchableOpacity style={styles.addButton} onPress={()=>writeText()}>
             <Text style={styles.plusIcon}>+</Text>
           </TouchableOpacity>
         </View>
+        
       </View>
       <View style={{ flex: 9 }}>
-        <SafeAreaView style={{ height: 570 }}>
-          <FlatList
-            data={DATA}
-            renderItem={({ item }) => (
-              <View style={styles.noteView}>
-                <View style={styles.noteView1}>
-                  <View style={styles.taskLeft}>
-
-                  </View>
-                </View>
-                <View style={styles.noteView2}>
-                  <Text>123</Text>
-                </View>
-                <View style={styles.noteView3}>
-                  <View style={styles.delete}>
-
-                  </View>
-                </View>
-              </View>
-            )}
-          />
-        </SafeAreaView>
+        
       </View>
       
     </View>
   );
 }
+/*<SafeAreaView style={{ height: 570 }}>
+<FlatList
+data={DATA}
+renderItem={({ item }) => (
+  <View style={styles.noteView}>
+    <View style={styles.noteView1}>
+      <View style={styles.taskLeft}>
 
+      </View>
+    </View>
+    <View style={styles.noteView2}>
+      <Text>123</Text>
+    </View>
+    <View style={styles.noteView3}>
+      <View style={styles.delete}>
+
+      </View>
+    </View>
+  </View>
+)}
+/>
+</SafeAreaView>
+*/
 const styles = StyleSheet.create({
   container: {
     flex: 1,
